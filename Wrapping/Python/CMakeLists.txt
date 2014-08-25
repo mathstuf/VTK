@@ -74,6 +74,8 @@ foreach(module IN LISTS _vtk_python_modules_only)
   unset(_saved_${module}_DEPENDS)
 endforeach()
 
+# TODO: Fix what breaks from the module libraries changing names.
+
 option(VTK_ENABLE_VTKPYTHON "Enable vtkpython and pvtkpython binaries" ON)
 mark_as_advanced(VTK_ENABLE_VTKPYTHON)
 if(VTK_ENABLE_VTKPYTHON)
