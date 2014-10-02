@@ -1,5 +1,5 @@
-ADD_SUBDIRECTORY(Ex1)
+add_subdirectory(Ex1)
 
-IF(VTK_USE_RENDERING)
-  ADD_SUBDIRECTORY(Ex2)
-ENDIF(VTK_USE_RENDERING)
+if(VTK_USE_RENDERING)
+  add_subdirectory(Ex2)
+endif()
