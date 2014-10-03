@@ -1348,19 +1348,19 @@ void vtkWin32OpenGLRenderWindow::SetWindowId(HWND arg)
 // Set this RenderWindow's X window id to a pre-existing window.
 void vtkWin32OpenGLRenderWindow::SetWindowInfo(char *info)
 {
-  int tmp;
-  sscanf(info, "%i", &tmp);
+  size_t tmp;
+  sscanf(info, "%zu", &tmp);
 
-  this->WindowId = (HWND)tmp;
+  this->WindowId = reinterpret_cast<HWND>(tmp);
   vtkDebugMacro(<< "Setting WindowId to " << this->WindowId << "\n");
 }
 
 void vtkWin32OpenGLRenderWindow::SetNextWindowInfo(char *info)
 {
-  int tmp;
-  sscanf(info, "%i", &tmp);
+  size_t tmp;
+  sscanf(info, "%zu", &tmp);
 
-  this->SetNextWindowId((HWND)tmp);
+  this->SetNextWindowId(reinterpret_cast<HWND>(tmp));
 }
 
 void vtkWin32OpenGLRenderWindow::SetDisplayId(void * arg)
@@ -1382,10 +1382,10 @@ void vtkWin32OpenGLRenderWindow::SetDeviceContext(HDC arg)
 // Sets the HWND id of the window that WILL BE created.
 void vtkWin32OpenGLRenderWindow::SetParentInfo(char *info)
 {
-  int tmp;
-  sscanf(info, "%i", &tmp);
+  size_t tmp;
+  sscanf(info, "%zu", &tmp);
 
-  this->ParentId = (HWND)tmp;
+  this->ParentId = reinterpret_cast<HWND>(tmp);
   vtkDebugMacro(<< "Setting ParentId to " << this->ParentId << "\n");
 }
 
