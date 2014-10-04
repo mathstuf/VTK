@@ -748,8 +748,20 @@ VTK_AUTOINIT(${vtk-module})
   vtk_module_export("${ARGN}")
 
   # Figure out which headers to install.
-  if(NOT VTK_INSTALL_NO_DEVELOPMENT AND _hdrs)
-    install(FILES ${_hdrs}
+  set(_install_hdrs ${_hdrs})
+  foreach (_hdr IN LISTS _hdrs)
+    get_source_file_property(_skip_install ${_hdr} SKIP_INSTALL)
+    message("XXXXXX: looking at ${_hdr}")
+    if (_skip_install)
+      message("XXXXXX: removing ${_hdr}")
+      list(REMOVE_ITEM _install_hdrs ${_hdr})
+    endif ()
+    get_source_file_property(_wrap ${_hdr} WRAP_EXCLUDE)
+    message("XXXXXX: wrap? ${_hdr}: ${_wrap}")
+  endforeach ()
+
+  if(NOT VTK_INSTALL_NO_DEVELOPMENT AND _install_hdrs)
+    install(FILES ${_install_hdrs}
       DESTINATION ${VTK_INSTALL_INCLUDE_DIR}
       COMPONENT Development
       )
