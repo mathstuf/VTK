@@ -8,12 +8,16 @@ if(PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
    endif()
 endif()
 
-function(_concatenate_files input_files output_file)
-  file(WRITE ${output_file} "") # Clear
-  foreach(file IN LISTS input_files)
-    file(READ ${file} content)
-    file(APPEND ${output_file} "${content}")
-  endforeach()
+function(_concatenate_files module output_file)
+  add_custom_command(
+    OUTPUT  "${output_file}"
+    DEPENDS "${VTK_SOURCE_DIR}/CMake/concat_hierarchy.cmake"
+            ${ARGN}
+    COMMAND "${CMAKE_COMMAND}"
+            "-Doutput=${output_file}"
+            "-Dinput=\"${ARGN}\""
+            -P "${VTK_SOURCE_DIR}/CMake/concat_hierarchy.cmake"
+    COMMENT "Making hierarchy file for ${module}")
 endfunction()
 
 # To support wrapping of either module or kit, this function
@@ -54,11 +58,11 @@ function(vtk_add_python_wrapping module_names sources_var)
   endforeach()
 
   set(KIT_HIERARCHY_FILE ${CMAKE_CURRENT_BINARY_DIR}/${target}Hierarchy.txt)
-  _concatenate_files("${KIT_HIERARCHY_FILES}" ${KIT_HIERARCHY_FILE})
+  _concatenate_files(${target} ${KIT_HIERARCHY_FILE} ${KIT_HIERARCHY_FILES})
 
   if(VTK_WRAP_HINTS_FILES)
     set(VTK_WRAP_HINTS ${CMAKE_CURRENT_BINARY_DIR}/${target}_hints)
-    _concatenate_files("${VTK_WRAP_HINTS_FILES}" ${VTK_WRAP_HINTS})
+    _concatenate_files(${target} ${VTK_WRAP_HINTS} ${VTK_WRAP_HINTS_FILES})
   endif()
 
   vtk_wrap_python(${target}Python Python_SRCS "${module_names}")

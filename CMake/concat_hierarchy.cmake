@@ -1,0 +1,6 @@
+set(contents)
+foreach(file IN LISTS input)
+  file(READ "${file}" content)
+  set(contents "${contents}${content}")
+endforeach()
+file(WRITE "${output}" "${contents}")
