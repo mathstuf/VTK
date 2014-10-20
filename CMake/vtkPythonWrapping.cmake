@@ -69,7 +69,7 @@ function(vtk_add_python_wrapping module_names sources_var)
   set(${sources_var} "${Python_SRCS}" "${extra_srcs}" PARENT_SCOPE)
 endfunction()
 
-function(vtk_add_python_wrapping_library module srcs)
+function(vtk_add_python_wrapping_library module srcs name)
   # Need to add the Wrapping/Python to the include directory
   set(_python_include_dirs
     ${VTK_SOURCE_DIR}/Wrapping/Python
@@ -102,19 +102,19 @@ function(vtk_add_python_wrapping_library module srcs)
   target_link_libraries(${module}PythonD LINK_PUBLIC
     vtkWrappingPythonCore ${extra_links} ${VTK_PYTHON_LIBRARIES})
 
-  set(top_srcs)
-  foreach (submodule IN LISTS ARGN)
+  foreach (submodule IN LISTS _${name}_modules name)
     if(${submodule}_IMPLEMENTS)
       set_property(TARGET ${module}PythonD APPEND PROPERTY COMPILE_DEFINITIONS
         "${submodule}_AUTOINIT=1(${submodule})")
     endif()
-    set(prefix ${submodule})
-    if(_${submodule}_is_kit)
-      set(prefix ${prefix}${VTK_KIT_SUFFIX})
-    endif()
-    list(APPEND top_srcs ${prefix}PythonInit.cxx)
-    target_link_libraries(${module}PythonD LINK_PUBLIC ${submodule})
   endforeach ()
+
+  set(prefix ${name})
+  if(_${name}_is_kit)
+    set(prefix ${prefix}${VTK_KIT_SUFFIX})
+  endif()
+  set(top_srcs ${prefix}PythonInit.cxx)
+  target_link_libraries(${module}PythonD LINK_PUBLIC ${name})
 
   _vtk_add_python_module(${module}Python ${top_srcs})
   target_link_libraries(${module}Python ${module}PythonD)
