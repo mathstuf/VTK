@@ -419,7 +419,8 @@ configure_file(CMake/VTKConfig.cmake.in VTKConfig.cmake @ONLY)
 # Generate VTKConfig.cmake for the install tree.
 set(VTK_CONFIG_CODE "
 # Compute the installation prefix from this VTKConfig.cmake file location.
-get_filename_component(VTK_INSTALL_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)")
+get_filename_component(VTK_INSTALL_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" REALPATH)
+get_filename_component(VTK_INSTALL_PREFIX \"\${VTK_INSTALL_PREFIX}\" PATH)")
 # Construct the proper number of get_filename_component(... PATH)
 # calls to compute the installation prefix.
 string(REGEX REPLACE "/" ";" _count "${VTK_INSTALL_PACKAGE_DIR}")
